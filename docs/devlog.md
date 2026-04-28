@@ -37,7 +37,13 @@ Linee guida, non obbligatorie in modo rigido. Ogni entry dovrebbe toccare almeno
 
 ### Settimana 1 (22-28 aprile 2026)
 
-_Scrivete qui._
+Questa settimana abbiamo iniziato il progetto aggiungendo le funzionalità di base come 
+le regole, il generatore e il modello di base. Il sistema di scoring e le regole 
+sono passate nei test subito, quindi in questa settimana non abbiamo trovato particolari
+difficoltà nello scrivere le prime fasi del gioco. Ci siamo organizzati cercando di suddividere
+equamente il lavoro e non abbiamo avuto per il momento bisogno dell'intelligenza artificiale.
+La settimana prossima pianifichiamo di disegnare le carte e avere un meccanismo che intercetti
+l'input dell'utente funzionante. Inoltre vorremmo avere una prima interfaccia grafica già con tutte le funzionalità base.
 
 ### Settimana 2 (29 aprile - 5 maggio 2026)
 
