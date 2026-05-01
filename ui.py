@@ -1,43 +1,48 @@
 import pygame
+from config import (
+    CARD_SPACING,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    CARD_HEIGHT,
+    CARD_WIDTH,
+    MARGIN,
+    CARD_BORDER_COLOR,
+    CARD_RECT_COLOR,
+    CARD_BORDER_RADIUS,
+    CARD_TEXT_COLOR,
+)
+
+
 def draw_card(surface, trial):
-	card_width = 260
-	card_height = 140
-	margin = 40
-	screen_width, screen_height = surface.get_size()
+    if getattr(trial, "position", None) == "TOP":
+        y = MARGIN
+    else:
+        y = SCREEN_HEIGHT - CARD_HEIGHT - MARGIN
 
-	if getattr(trial, 'position', None) == 'TOP':
-		y = margin
-	else: 
-		y = screen_height - card_height - margin
+    x = (SCREEN_WIDTH - CARD_WIDTH) // 2
 
+    rect = pygame.Rect(x, y, CARD_WIDTH, CARD_HEIGHT)
+    pygame.draw.rect(surface, CARD_RECT_COLOR, rect, border_radius=CARD_BORDER_RADIUS)
+    pygame.draw.rect(
+        surface, CARD_BORDER_COLOR, rect, 3, border_radius=CARD_BORDER_RADIUS
+    )
 
-	x = (screen_width - card_width) // 2
+    letter = getattr(trial, "letter", "?")
+    number = str(getattr(trial, "number", "?"))
 
-	rect = pygame.Rect(x, y, card_width, card_height)
-	border_radius = 24
-	pygame.draw.rect(surface, (255, 255, 255), rect, border_radius=border_radius)
-	pygame.draw.rect(surface, (0, 0, 0), rect, 3, border_radius=border_radius)
+    font = pygame.font.SysFont(None, 72)
+    letter_surf = font.render(letter, True, CARD_TEXT_COLOR)
+    number_surf = font.render(number, True, CARD_TEXT_COLOR)
 
+    total_width = letter_surf.get_width() + CARD_SPACING + number_surf.get_width()
+    center_x = x + CARD_WIDTH // 2
+    center_y = y + CARD_HEIGHT // 2
 
-	font = pygame.font.SysFont(None, 72)
-	letter = getattr(trial, 'letter', '?')
-	number = str(getattr(trial, 'number', '?'))
+    letter_x = center_x - total_width // 2
+    number_x = letter_x + letter_surf.get_width() + CARD_SPACING
+    letter_rect = letter_surf.get_rect(midleft=(letter_x, center_y))
+    number_rect = number_surf.get_rect(midleft=(number_x, center_y))
 
+    surface.blit(letter_surf, letter_rect)
+    surface.blit(number_surf, number_rect)
 
-	font_big = pygame.font.SysFont(None, 72)
-	letter_surf = font_big.render(letter, True, (0, 0, 0))
-	number_surf = font_big.render(number, True, (0, 0, 0))
-
-	spacing = 16
-	total_width = letter_surf.get_width() + spacing + number_surf.get_width()
-	center_x = x + card_width // 2
-	center_y = y + card_height // 2
-
-	letter_x = center_x - total_width // 2
-	number_x = letter_x + letter_surf.get_width() + spacing
-	letter_rect = letter_surf.get_rect(midleft=(letter_x, center_y))
-	number_rect = number_surf.get_rect(midleft=(number_x, center_y))
-
-	surface.blit(letter_surf, letter_rect)
-	surface.blit(number_surf, number_rect)
-    

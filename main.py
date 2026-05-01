@@ -1,10 +1,8 @@
-import pygame 
+import pygame
 from ui import draw_card
 from generator import generate_trial
+from config import SCREEN_HEIGHT, SCREEN_WIDTH, FPS
 import random
-SCREEN_WIDTH  = 800
-SCREEN_HEIGHT = 600
-FPS           = 60
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -23,8 +21,5 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-    
     pygame.display.flip()
-    clock.tick(60)
-
-
+    clock.tick(FPS)
