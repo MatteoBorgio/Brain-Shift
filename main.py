@@ -2,8 +2,10 @@ import pygame
 from scoring import apply_answer
 from ui import draw_card
 from generator import generate_trial
-from config import SCREEN_HEIGHT, SCREEN_WIDTH, FPS, SCREEN_BG_COLOR
-import random
+from config import SCREEN_HEIGHT, SCREEN_WIDTH, FPS, SCREEN_BG_COLOR, COUNTDOWN
+from random import Random
+from time import time
+from state import State
 
 # Inizializzazione di pygame
 pygame.init()
@@ -18,11 +20,18 @@ wrong_answers = 0
 total_answers = 0
 
 running = True
-rng = random.Random()
+start_time = time()
+state = State.PLAYING
+rng = Random()
 trial = generate_trial(rng)
 while running:
     screen.fill(SCREEN_BG_COLOR)
     draw_card(screen, trial)
+
+    elapsed_time = time() - start_time
+
+    if elapsed_time >= COUNTDOWN:
+        state = State.RESULTS
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -42,8 +51,6 @@ while running:
                 total_answers += 1
                 score = apply_answer(score, is_correct)
 
-                print(is_correct)
-                print(score)
                 trial = generate_trial(rng)
 
     pygame.display.flip()
