@@ -47,7 +47,7 @@ l'input dell'utente funzionante. Inoltre vorremmo avere una prima interfaccia gr
 
 ### Settimana 2 (29 aprile - 5 maggio 2026)
 
-_Scrivete qui._
+Questa settimana abbiamo implementato la logica del gioco, che adesso è gia giocabile da terminale. L'inserimento delle carte a schermo è stata la parte più sfidante, mentre la parte logica è stata più semplice. Abbiamo deciso di usare un sistema di scoring che dia 10 punti alla risposta corretta e tolga 5 punti alla risposta sbagliata, in modo da rendere il gioco più dinamico e sfavorire la casualità delle scelte. Inoltre abbiamo corretto un errore riguardante la generazione dei trial che sbilanciava la possibilità di trovare vocali e consonanti. Continuiamo a cercare di suddividere il lavoro essendo consapevoli ognuno del lavoro dell'altro in modo da procedere di pare passo. Per la prossima settimana il gioco dovrà contenere i requisiti per il 6 in modo da poter concentrarci sulle feature aggiuntive l'ultima settimana.
 
 ### Settimana 3 (6-12 maggio 2026)
 
