@@ -1,5 +1,6 @@
 import pygame
 from config import (
+    SCREEN_WIDTH,
     TIMER_BAR_FG_COLOR,
     TIMER_BAR_MID_EXPIRING,
     TIMER_BAR_ABOUT_TO_EXPIRE,
@@ -33,3 +34,18 @@ def draw_timer_bar(surface: pygame.Surface, remaining: float, duration: int):
         border_radius=TIMER_BORDER_RADIUS,
     )
 
+
+def draw_timer_text(surface: pygame.Surface, remaining: float, expired: bool):
+    font = pygame.font.Font(None, 36)
+    y = TIMER_BAR_Y + TIMER_BAR_HEIGHT + 10
+    remaining_seconds = int(remaining)
+
+    if expired:
+        text = "Tempo scaduto!"
+        surf = font.render(text, True, (255, 0, 0))
+    else:
+        text = str(remaining_seconds)
+        surf = font.render(text, True, (255, 255, 255))
+
+    rect = surf.get_rect(centerx=SCREEN_WIDTH // 2, top=y)
+    surface.blit(surf, rect)
