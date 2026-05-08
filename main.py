@@ -51,6 +51,7 @@ while running:
                 total_answers += 1
                 score = apply_answer(score, is_correct)
 
+                print(is_correct)
                 trial = generate_trial(rng)
 
     pygame.display.flip()

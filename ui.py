@@ -15,9 +15,9 @@ from config import (
 
 def draw_card(surface, trial):
     if getattr(trial, "position", None) == "TOP":
-        y = MARGIN
+        y = (SCREEN_HEIGHT // 2) - CARD_HEIGHT - MARGIN
     else:
-        y = SCREEN_HEIGHT - CARD_HEIGHT - MARGIN
+        y = (SCREEN_HEIGHT // 2) + MARGIN
 
     x = (SCREEN_WIDTH - CARD_WIDTH) // 2
 
