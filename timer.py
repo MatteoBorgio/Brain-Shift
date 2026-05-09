@@ -27,10 +27,15 @@ def draw_timer_bar(surface: pygame.Surface, remaining: float, duration: int):
         pygame.Rect(TIMER_BAR_X, TIMER_BAR_Y, TIMER_BAR_WIDTH, TIMER_BAR_HEIGHT),
         border_radius=TIMER_BORDER_RADIUS,
     )
+
+    ratio = max(0, remaining / duration)
+
+    current_width = TIMER_BAR_WIDTH * ratio
+
     pygame.draw.rect(
         surface,
         color,
-        pygame.Rect(TIMER_BAR_X, TIMER_BAR_Y, TIMER_BAR_WIDTH, TIMER_BAR_HEIGHT),
+        pygame.Rect(TIMER_BAR_X, TIMER_BAR_Y, current_width, TIMER_BAR_HEIGHT),
         border_radius=TIMER_BORDER_RADIUS,
     )
 
