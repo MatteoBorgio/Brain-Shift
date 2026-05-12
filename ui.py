@@ -7,13 +7,12 @@ from config import (
     CARD_WIDTH,
     MARGIN,
     CARD_BORDER_COLOR,
-    CARD_RECT_COLOR,
     CARD_BORDER_RADIUS,
     CARD_TEXT_COLOR,
 )
 
 
-def draw_card(surface, trial):
+def draw_card(surface, trial, color):
     if getattr(trial, "position", None) == "TOP":
         y = (SCREEN_HEIGHT // 2) - CARD_HEIGHT - MARGIN
     else:
@@ -22,7 +21,7 @@ def draw_card(surface, trial):
     x = (SCREEN_WIDTH - CARD_WIDTH) // 2
 
     rect = pygame.Rect(x, y, CARD_WIDTH, CARD_HEIGHT)
-    pygame.draw.rect(surface, CARD_RECT_COLOR, rect, border_radius=CARD_BORDER_RADIUS)
+    pygame.draw.rect(surface, color, rect, border_radius=CARD_BORDER_RADIUS)
     pygame.draw.rect(
         surface, CARD_BORDER_COLOR, rect, 3, border_radius=CARD_BORDER_RADIUS
     )
@@ -68,7 +67,8 @@ def draw_results(surface, score, correct_answers, wrong_answers, total_answers):
     for index, line in enumerate(lines):
         font = title_font if index == 0 else text_font
         text_surf = font.render(line, True, CARD_TEXT_COLOR)
-        text_rect = text_surf.get_rect(center=(surface.get_width() // 2, y + text_surf.get_height() // 2))
+        text_rect = text_surf.get_rect(
+            center=(surface.get_width() // 2, y + text_surf.get_height() // 2)
+        )
         surface.blit(text_surf, text_rect)
         y += text_surf.get_height() + 12
-

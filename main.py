@@ -2,7 +2,17 @@ import pygame
 from scoring import apply_answer
 from ui import draw_card, draw_results
 from generator import generate_trial
-from config import SCREEN_HEIGHT, SCREEN_WIDTH, FPS, SCREEN_BG_COLOR, COUNTDOWN
+from config import (
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    FPS,
+    SCREEN_BG_COLOR,
+    COUNTDOWN,
+    CARD_RECT_COLOR_WRONG,
+    CARD_RECT_BASE_COLOR,
+    CARD_RECT_COLOR_CORRECT,
+    FEEDBACK_DURATION,
+)
 from random import Random
 from time import time
 from state import State
@@ -19,17 +29,35 @@ score = 0
 correct_answers = 0
 wrong_answers = 0
 total_answers = 0
+feedback_end_time = 0
 
 
 # Funzioni utili
-def reset_game(score, correct_answers, wrong_answers, total_answers, start_time, state):
+def reset_game(
+    score,
+    correct_answers,
+    wrong_answers,
+    total_answers,
+    start_time,
+    state,
+    active_color,
+):
     start_time = time()
     score = 0
     correct_answers = 0
     wrong_answers = 0
     total_answers = 0
     state = State.PLAYING
-    return score, correct_answers, wrong_answers, total_answers, start_time, state
+    active_color = CARD_RECT_BASE_COLOR
+    return (
+        score,
+        correct_answers,
+        wrong_answers,
+        total_answers,
+        start_time,
+        state,
+        active_color,
+    )
 
 
 running = True
@@ -37,10 +65,14 @@ start_time = time()
 state = State.PLAYING
 rng = Random()
 trial = generate_trial(rng)
+active_color = CARD_RECT_BASE_COLOR
 while running:
     if state == State.PLAYING:
+        current_time = pygame.time.get_ticks()
+        if current_time > feedback_end_time:
+            active_color = CARD_RECT_BASE_COLOR
         screen.fill(SCREEN_BG_COLOR)
-        draw_card(screen, trial)
+        draw_card(screen, trial, active_color)
 
         elapsed_time = time() - start_time
         remaining_time = COUNTDOWN - elapsed_time
@@ -64,8 +96,12 @@ while running:
                     is_correct = user_answer == trial.expected_answer
                     if is_correct:
                         correct_answers += 1
+                        active_color = CARD_RECT_COLOR_CORRECT
                     else:
+                        active_color = CARD_RECT_COLOR_WRONG
                         wrong_answers += 1
+
+                    feedback_end_time = current_time + FEEDBACK_DURATION
                     total_answers += 1
                     score = apply_answer(score, is_correct)
 
@@ -85,6 +121,7 @@ while running:
                         total_answers,
                         start_time,
                         state,
+                        active_color,
                     ) = reset_game(
                         score,
                         correct_answers,
@@ -92,6 +129,7 @@ while running:
                         total_answers,
                         start_time,
                         state,
+                        active_color,
                     )
 
     pygame.display.flip()
