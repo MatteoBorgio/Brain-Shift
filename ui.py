@@ -9,6 +9,10 @@ from config import (
     CARD_BORDER_COLOR,
     CARD_BORDER_RADIUS,
     CARD_TEXT_COLOR,
+    HINT_COLOR,
+    PADDING,
+    OFFSET_X,
+    MARGIN_HINTS,
 )
 
 
@@ -44,6 +48,40 @@ def draw_card(surface, trial, color):
 
     surface.blit(letter_surf, letter_rect)
     surface.blit(number_surf, number_rect)
+
+
+def draw_hints(surface, trial, correct_answers, max_threshold=10):
+    alpha = max(0, 255 - (correct_answers * (255 // max_threshold)))
+    if alpha <= 0:
+        return
+
+    font_hint = pygame.font.SysFont(None, 30)
+
+    card_x = (SCREEN_WIDTH - CARD_WIDTH) // 2
+    hint_x = card_x + CARD_WIDTH + OFFSET_X
+
+    if trial.position == "TOP":
+        text = "NUMERO PARI?"
+        card_y = MARGIN_HINTS
+    else:
+        text = "VOCALE?"
+        card_y = SCREEN_HEIGHT - CARD_HEIGHT - MARGIN_HINTS
+
+    text_surface = font_hint.render(text, True, HINT_COLOR)
+    text_surface.set_alpha(alpha)
+
+    box_width = text_surface.get_width() + PADDING * 2
+    box_height = text_surface.get_height() + PADDING * 2
+
+    hint_y = card_y + (CARD_HEIGHT // 2) - (box_height // 2)
+
+    box_surface = pygame.Surface((box_width, box_height), pygame.SRCALPHA)
+    pygame.draw.rect(
+        box_surface, (255, 255, 255, alpha), box_surface.get_rect(), border_radius=8
+    )
+
+    surface.blit(box_surface, (hint_x, hint_y))
+    surface.blit(text_surface, (hint_x + PADDING, hint_y + PADDING))
 
 
 def draw_results(surface, score, correct_answers, wrong_answers, total_answers):

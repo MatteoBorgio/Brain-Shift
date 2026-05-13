@@ -1,6 +1,6 @@
 import pygame
 from scoring import apply_answer
-from ui import draw_card, draw_results
+from ui import draw_card, draw_results, draw_hints
 from generator import generate_trial
 from config import (
     SCREEN_HEIGHT,
@@ -73,6 +73,7 @@ while running:
             active_color = CARD_RECT_BASE_COLOR
         screen.fill(SCREEN_BG_COLOR)
         draw_card(screen, trial, active_color)
+        draw_hints(screen, trial, correct_answers)
 
         elapsed_time = time() - start_time
         remaining_time = COUNTDOWN - elapsed_time
