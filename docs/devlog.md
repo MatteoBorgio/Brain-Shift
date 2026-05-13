@@ -51,7 +51,8 @@ Questa settimana abbiamo implementato la logica del gioco, che adesso è gia gio
 
 ### Settimana 3 (6-12 maggio 2026)
 
-_Scrivete qui._
+Questa settimana abbiamo aggiunto una barra di un timer funzionante e un feedback visivo per l'utente, rosso se sbagliato e verde se corretto. Siamo andati più lentamente rispetto alle settimane precedenti e per la prossima cercheremo di completare il progetto e implementare le feature mancanti. 
+
 
 ### Settimana finale (13-17 maggio 2026)
 
