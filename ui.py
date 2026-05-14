@@ -12,7 +12,6 @@ from config import (
     HINT_COLOR,
     PADDING,
     OFFSET_X,
-    MARGIN_HINTS,
 )
 
 
@@ -58,14 +57,14 @@ def draw_hints(surface, trial, correct_answers, max_threshold=10):
     font_hint = pygame.font.SysFont(None, 30)
 
     card_x = (SCREEN_WIDTH - CARD_WIDTH) // 2
-    hint_x = card_x + CARD_WIDTH + OFFSET_X
+    hint_x = card_x + OFFSET_X + CARD_WIDTH
 
     if trial.position == "TOP":
         text = "NUMERO PARI?"
-        card_y = MARGIN_HINTS
+        card_y = (SCREEN_HEIGHT // 2) - CARD_HEIGHT - MARGIN
     else:
         text = "VOCALE?"
-        card_y = SCREEN_HEIGHT - CARD_HEIGHT - MARGIN_HINTS
+        card_y = (SCREEN_HEIGHT // 2) + MARGIN
 
     text_surface = font_hint.render(text, True, HINT_COLOR)
     text_surface.set_alpha(alpha)
@@ -110,3 +109,4 @@ def draw_results(surface, score, correct_answers, wrong_answers, total_answers):
         )
         surface.blit(text_surf, text_rect)
         y += text_surf.get_height() + 12
+
