@@ -1,6 +1,6 @@
 import pygame
 from scoring import apply_answer
-from ui import draw_card, draw_results, draw_hints, draw_intro
+from ui import draw_card, draw_results, draw_hints, draw_intro, draw_paused
 from generator import generate_trial
 from config import (
     SCREEN_HEIGHT,
@@ -30,6 +30,7 @@ correct_answers = 0
 wrong_answers = 0
 total_answers = 0
 feedback_end_time = 0
+paused_elapsed_time = 0
 
 
 # Funzioni utili

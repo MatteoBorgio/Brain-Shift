@@ -142,3 +142,26 @@ def draw_intro(surface):
         surface.blit(text_surf, text_rect)
         y += text_surf.get_height() + 15
 
+
+def draw_paused(surface, remaining_time):
+    overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+    overlay.set_alpha(180)
+    overlay.fill((0, 0, 0))
+    surface.blit(overlay, (0, 0))
+
+    font_title = pygame.font.SysFont(None, 80, bold=True)
+    font_text = pygame.font.SysFont(None, 42)
+    font_small = pygame.font.SysFont(None, 32)
+
+    title = font_title.render("PAUSA", True, (255, 255, 255))
+    title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
+    surface.blit(title, title_rect)
+
+    timer_text = font_text.render(f"Tempo rimanente: {remaining_time:.1f}s", True, (255, 255, 255))
+    timer_rect = timer_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    surface.blit(timer_text, timer_rect)
+
+    resume_text = font_small.render("Premi P per riprendere", True, (200, 200, 200))
+    resume_rect = resume_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 80))
+    surface.blit(resume_text, resume_rect)
+
