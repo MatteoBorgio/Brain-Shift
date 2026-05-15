@@ -110,3 +110,35 @@ def draw_results(surface, score, correct_answers, wrong_answers, total_answers):
         surface.blit(text_surf, text_rect)
         y += text_surf.get_height() + 12
 
+
+def draw_intro(surface):
+    title_font = pygame.font.SysFont(None, 80, bold=True)
+    text_font = pygame.font.SysFont(None, 32)
+    small_font = pygame.font.SysFont(None, 24)
+
+    lines = [
+        ("Brain Shift", title_font),
+        ("", None),  # spacer
+        ("Rispondi velocemente:", text_font),
+        ("TOP: il numero è pari?", small_font),
+        ("BOTTOM: la lettera è una vocale?", small_font),
+        ("", None),  # spacer
+        ("Controlli:", text_font),
+        ("← SINISTRA = NO", small_font),
+        ("→ DESTRA = SI'", small_font),
+        ("", None),  # spacer
+        ("Premi SPAZIO per iniziare", text_font),
+    ]
+
+    y = 60
+    for line_text, font in lines:
+        if line_text == "":
+            y += 15
+            continue
+        text_surf = font.render(line_text, True, CARD_TEXT_COLOR)
+        text_rect = text_surf.get_rect(
+            center=(surface.get_width() // 2, y)
+        )
+        surface.blit(text_surf, text_rect)
+        y += text_surf.get_height() + 15
+

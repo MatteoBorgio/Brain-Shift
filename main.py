@@ -1,6 +1,6 @@
 import pygame
 from scoring import apply_answer
-from ui import draw_card, draw_results, draw_hints
+from ui import draw_card, draw_results, draw_hints, draw_intro
 from generator import generate_trial
 from config import (
     SCREEN_HEIGHT,
@@ -93,7 +93,7 @@ while running:
                     running = False
 
                 elif event.key in (pygame.K_RIGHT, pygame.K_LEFT):
-                    user_answer = event.key == pygame.K_LEFT
+                    user_answer = event.key == pygame.K_RIGHT
                     is_correct = user_answer == trial.expected_answer
                     if is_correct:
                         correct_answers += 1
@@ -109,7 +109,13 @@ while running:
                     trial = generate_trial(rng)
     else:
         screen.fill(SCREEN_BG_COLOR)
-        draw_results(screen, score, wrong_answers, correct_answers, total_answers)
+        draw_results(
+            screen,
+            score=score,
+            correct_answers=correct_answers,
+            wrong_answers=wrong_answers,
+            total_answers=total_answers,
+        )
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
