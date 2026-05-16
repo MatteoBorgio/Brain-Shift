@@ -7,6 +7,7 @@ from ui import (
     draw_intro,
     draw_paused,
     draw_buttons,
+    draw_current_score,
 )
 from generator import generate_trial
 from config import (
@@ -184,6 +185,7 @@ while running:
         draw_buttons(screen)
         draw_timer_bar(screen, remaining_time, COUNTDOWN)
         draw_timer_text(screen, remaining_time, remaining_time <= 0)
+        draw_current_score(screen, score)
 
     elif state == State.RESULTS:
         draw_results(

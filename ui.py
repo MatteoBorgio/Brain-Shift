@@ -275,3 +275,13 @@ def draw_buttons(surface):
 
     surface.blit(surf_no, surf_no.get_rect(center=rect_no.center))
     surface.blit(surf_si, surf_si.get_rect(center=rect_si.center))
+
+
+def draw_current_score(surface, score):
+    font_score = pygame.font.SysFont("segoeui,arial,helvetica", 28, bold=True)
+    text = f"Punteggio: {score}"
+    text_surface = font_score.render(text, True, (255, 255, 255))
+    margin_x = 50
+    margin_y = 70
+
+    surface.blit(text_surface, (margin_x, margin_y))
