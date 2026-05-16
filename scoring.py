@@ -5,12 +5,13 @@ def apply_answer(score: int, is_correct: bool) -> int:
     return max(0, (score - 5))
 
 
+
 def apply_multiplier(score: int, streak: int):
-    if streak >= 3:
-        score *= 2
-    elif streak >= 6:
-        score *= 3
+    if streak > 3:
+        score += streak * 10
+    elif streak > 6:
+        score += streak * 20
     elif streak > 9:
-        score *= 4
+        score += streak * 40
 
     return score
