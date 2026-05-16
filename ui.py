@@ -1,6 +1,7 @@
 import pygame
 from config import (
     CARD_SPACING,
+    COLOR_BUTTON_TEXT,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     CARD_HEIGHT,
@@ -12,6 +13,14 @@ from config import (
     HINT_COLOR,
     PADDING,
     OFFSET_X,
+    BUTTON_HEIGHT,
+    BUTTON_NO_X,
+    BUTTON_Y,
+    BUTTON_YES_X,
+    BUTTON_RADIUS,
+    BUTTON_WIDTH,
+    COLOR_NO,
+    COLOR_YES,
 )
 
 FONT_FAMILY = "segoeui,arial,helvetica"
@@ -243,3 +252,26 @@ def draw_paused(surface, remaining_time):
         (200, 200, 200),
         (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100),
     )
+
+
+def draw_buttons(surface):
+    font_btn = pygame.font.SysFont("segoeui,arial,helvetica", 28, bold=True)
+
+    rect_no = pygame.Rect(BUTTON_NO_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+    rect_si = pygame.Rect(BUTTON_YES_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+
+    for rect in (rect_no, rect_si):
+        shadow = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+        pygame.draw.rect(
+            shadow, (0, 0, 0, 40), shadow.get_rect(), border_radius=BUTTON_RADIUS
+        )
+        surface.blit(shadow, (rect.x + 3, rect.y + 4))
+
+    pygame.draw.rect(surface, COLOR_NO, rect_no, border_radius=BUTTON_RADIUS)
+    pygame.draw.rect(surface, COLOR_YES, rect_si, border_radius=BUTTON_RADIUS)
+
+    surf_no = font_btn.render("NO", True, COLOR_BUTTON_TEXT)
+    surf_si = font_btn.render("SÌ", True, COLOR_BUTTON_TEXT)
+
+    surface.blit(surf_no, surf_no.get_rect(center=rect_no.center))
+    surface.blit(surf_si, surf_si.get_rect(center=rect_si.center))

@@ -1,6 +1,13 @@
 import pygame
 from scoring import apply_answer
-from ui import draw_card, draw_results, draw_hints, draw_intro, draw_paused
+from ui import (
+    draw_card,
+    draw_results,
+    draw_hints,
+    draw_intro,
+    draw_paused,
+    draw_buttons,
+)
 from generator import generate_trial
 from config import (
     SCREEN_HEIGHT,
@@ -12,6 +19,11 @@ from config import (
     CARD_RECT_BASE_COLOR,
     CARD_RECT_COLOR_CORRECT,
     FEEDBACK_DURATION,
+    BUTTON_YES_X,
+    BUTTON_NO_X,
+    BUTTON_Y,
+    BUTTON_WIDTH,
+    BUTTON_HEIGHT,
 )
 from random import Random
 from time import time
@@ -79,6 +91,8 @@ while running:
         if remaining_time <= 0:
             state = State.RESULTS
 
+    user_answer = None
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -105,19 +119,6 @@ while running:
 
                 elif event.key in (pygame.K_RIGHT, pygame.K_LEFT):
                     user_answer = event.key == pygame.K_RIGHT
-                    is_correct = user_answer == trial.expected_answer
-
-                    if is_correct:
-                        correct_answers += 1
-                        active_color = CARD_RECT_COLOR_CORRECT
-                    else:
-                        wrong_answers += 1
-                        active_color = CARD_RECT_COLOR_WRONG
-
-                    feedback_end_time = current_time_ticks + FEEDBACK_DURATION
-                    total_answers += 1
-                    score = apply_answer(score, is_correct)
-                    trial = generate_trial(rng)
 
             elif state == State.RESULTS:
                 if event.key == pygame.K_r and (event.mod & pygame.KMOD_SHIFT):
@@ -139,6 +140,36 @@ while running:
                         active_color,
                     )
 
+        elif event.type == pygame.MOUSEBUTTONDOWN and state == State.PLAYING:
+            if event.button == 1:
+                mouse_pos = event.pos
+                rect_no = pygame.Rect(
+                    BUTTON_NO_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT
+                )
+                rect_si = pygame.Rect(
+                    BUTTON_YES_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT
+                )
+
+                if rect_si.collidepoint(mouse_pos):
+                    user_answer = True
+                elif rect_no.collidepoint(mouse_pos):
+                    user_answer = False
+
+    if state == State.PLAYING and user_answer is not None:
+        is_correct = user_answer == trial.expected_answer
+
+        if is_correct:
+            correct_answers += 1
+            active_color = CARD_RECT_COLOR_CORRECT
+        else:
+            wrong_answers += 1
+            active_color = CARD_RECT_COLOR_WRONG
+
+        feedback_end_time = current_time_ticks + FEEDBACK_DURATION
+        total_answers += 1
+        score = apply_answer(score, is_correct)
+        trial = generate_trial(rng)
+
     screen.fill(SCREEN_BG_COLOR)
 
     if state == State.INTRO:
@@ -150,6 +181,7 @@ while running:
     elif state == State.PLAYING:
         draw_card(screen, trial, active_color)
         draw_hints(screen, trial, correct_answers)
+        draw_buttons(screen)
         draw_timer_bar(screen, remaining_time, COUNTDOWN)
         draw_timer_text(screen, remaining_time, remaining_time <= 0)
 
