@@ -67,55 +67,39 @@ active_color = CARD_RECT_BASE_COLOR
 remaining_time = COUNTDOWN
 
 while running:
-    screen.fill(SCREEN_BG_COLOR)
+    current_time_ticks = pygame.time.get_ticks()
 
-    if state == State.INTRO:
-        draw_intro(screen)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    start_time = time()
-                    state = State.PLAYING
-
-    elif state == State.PAUSED:
-        draw_paused(screen, remaining_time)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
-                    pause_duration = time() - pause_start_time
-                    start_time += pause_duration
-                    state = State.PLAYING
-
-    elif state == State.PLAYING:
-        current_time_ticks = pygame.time.get_ticks()
-
+    if state == State.PLAYING:
         if current_time_ticks > feedback_end_time:
             active_color = CARD_RECT_BASE_COLOR
 
         elapsed_time = time() - start_time
         remaining_time = max(0, COUNTDOWN - elapsed_time)
 
-        draw_card(screen, trial, active_color)
-        draw_hints(screen, trial, correct_answers)
-        draw_timer_bar(screen, remaining_time, COUNTDOWN)
-        draw_timer_text(screen, remaining_time, remaining_time <= 0)
-
         if remaining_time <= 0:
             state = State.RESULTS
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
                 running = False
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
+            elif state == State.INTRO:
+                if event.key == pygame.K_SPACE:
+                    start_time = time()
+                    state = State.PLAYING
 
-                elif event.key == pygame.K_p:
+            elif state == State.PAUSED:
+                if event.key == pygame.K_p:
+                    pause_duration = time() - pause_start_time
+                    start_time += pause_duration
+                    state = State.PLAYING
+
+            elif state == State.PLAYING:
+                if event.key == pygame.K_p:
                     pause_start_time = time()
                     state = State.PAUSED
 
@@ -135,18 +119,7 @@ while running:
                     score = apply_answer(score, is_correct)
                     trial = generate_trial(rng)
 
-    elif state == State.RESULTS:
-        draw_results(
-            screen,
-            score=score,
-            correct_answers=correct_answers,
-            wrong_answers=wrong_answers,
-            total_answers=total_answers,
-        )
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
+            elif state == State.RESULTS:
                 if event.key == pygame.K_r and (event.mod & pygame.KMOD_SHIFT):
                     (
                         score,
@@ -165,6 +138,29 @@ while running:
                         state,
                         active_color,
                     )
+
+    screen.fill(SCREEN_BG_COLOR)
+
+    if state == State.INTRO:
+        draw_intro(screen)
+
+    elif state == State.PAUSED:
+        draw_paused(screen, remaining_time)
+
+    elif state == State.PLAYING:
+        draw_card(screen, trial, active_color)
+        draw_hints(screen, trial, correct_answers)
+        draw_timer_bar(screen, remaining_time, COUNTDOWN)
+        draw_timer_text(screen, remaining_time, remaining_time <= 0)
+
+    elif state == State.RESULTS:
+        draw_results(
+            screen,
+            score=score,
+            correct_answers=correct_answers,
+            wrong_answers=wrong_answers,
+            total_answers=total_answers,
+        )
 
     pygame.display.flip()
     clock.tick(FPS)

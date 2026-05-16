@@ -14,6 +14,8 @@ from config import (
     OFFSET_X,
 )
 
+FONT_FAMILY = "segoeui,arial,helvetica"
+
 
 def draw_card(surface, trial, color):
     if getattr(trial, "position", None) == "TOP":
@@ -22,6 +24,15 @@ def draw_card(surface, trial, color):
         y = (SCREEN_HEIGHT // 2) + MARGIN
 
     x = (SCREEN_WIDTH - CARD_WIDTH) // 2
+
+    shadow_surf = pygame.Surface((CARD_WIDTH, CARD_HEIGHT), pygame.SRCALPHA)
+    pygame.draw.rect(
+        shadow_surf,
+        (0, 0, 0, 40),
+        shadow_surf.get_rect(),
+        border_radius=CARD_BORDER_RADIUS,
+    )
+    surface.blit(shadow_surf, (x + 6, y + 8))
 
     rect = pygame.Rect(x, y, CARD_WIDTH, CARD_HEIGHT)
     pygame.draw.rect(surface, color, rect, border_radius=CARD_BORDER_RADIUS)
@@ -32,7 +43,7 @@ def draw_card(surface, trial, color):
     letter = getattr(trial, "letter", "?")
     number = str(getattr(trial, "number", "?"))
 
-    font = pygame.font.SysFont(None, 72)
+    font = pygame.font.SysFont(FONT_FAMILY, 80, bold=True)
     letter_surf = font.render(letter, True, CARD_TEXT_COLOR)
     number_surf = font.render(number, True, CARD_TEXT_COLOR)
 
@@ -54,7 +65,7 @@ def draw_hints(surface, trial, correct_answers, max_threshold=10):
     if alpha <= 0:
         return
 
-    font_hint = pygame.font.SysFont(None, 30)
+    font_hint = pygame.font.SysFont(FONT_FAMILY, 28, bold=True)
 
     card_x = (SCREEN_WIDTH - CARD_WIDTH) // 2
     hint_x = card_x + OFFSET_X + CARD_WIDTH
@@ -74,6 +85,16 @@ def draw_hints(surface, trial, correct_answers, max_threshold=10):
 
     hint_y = card_y + (CARD_HEIGHT // 2) - (box_height // 2)
 
+    shadow_alpha = min(alpha, 40)
+    shadow_surface = pygame.Surface((box_width, box_height), pygame.SRCALPHA)
+    pygame.draw.rect(
+        shadow_surface,
+        (0, 0, 0, shadow_alpha),
+        shadow_surface.get_rect(),
+        border_radius=8,
+    )
+    surface.blit(shadow_surface, (hint_x + 3, hint_y + 4))
+
     box_surface = pygame.Surface((box_width, box_height), pygame.SRCALPHA)
     pygame.draw.rect(
         box_surface, (255, 255, 255, alpha), box_surface.get_rect(), border_radius=8
@@ -88,19 +109,37 @@ def draw_results(surface, score, correct_answers, wrong_answers, total_answers):
     if total_answers > 0:
         accuracy = (correct_answers / total_answers) * 100
 
-    title_font = pygame.font.SysFont(None, 64)
-    text_font = pygame.font.SysFont(None, 42)
+    title_font = pygame.font.SysFont(FONT_FAMILY, 64, bold=True)
+    text_font = pygame.font.SysFont(FONT_FAMILY, 38)
+    small_font = pygame.font.SysFont(FONT_FAMILY, 28, italic=True)
+
     lines = [
         f"Punteggio: {score}",
         f"Corrette: {correct_answers}",
         f"Sbagliate: {wrong_answers}",
         f"Accuratezza: {accuracy:.1f}%",
-        "Premi R per rigiocare",
     ]
 
-    total_height = sum(text_font.size(line)[1] + 12 for line in lines)
-    y = (surface.get_height() - total_height) // 2
+    INT_PADDING_X = 50
+    INT_PADDING_Y = 50
 
+    content_height = sum(text_font.size(line)[1] + 15 for line in lines) + 40
+    panel_width = 450 + (INT_PADDING_X * 2)
+    panel_height = content_height + (INT_PADDING_Y * 2)
+
+    panel_rect = pygame.Rect(0, 0, panel_width, panel_height)
+    panel_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+
+    shadow_surf = pygame.Surface((panel_width, panel_height), pygame.SRCALPHA)
+    pygame.draw.rect(
+        shadow_surf, (0, 0, 0, 50), shadow_surf.get_rect(), border_radius=20
+    )
+    surface.blit(shadow_surf, (panel_rect.x + 8, panel_rect.y + 10))
+
+    pygame.draw.rect(surface, (250, 250, 250), panel_rect, border_radius=20)
+    pygame.draw.rect(surface, CARD_BORDER_COLOR, panel_rect, 3, border_radius=20)
+
+    y = panel_rect.y + INT_PADDING_Y
     for index, line in enumerate(lines):
         font = title_font if index == 0 else text_font
         text_surf = font.render(line, True, CARD_TEXT_COLOR)
@@ -108,60 +147,99 @@ def draw_results(surface, score, correct_answers, wrong_answers, total_answers):
             center=(surface.get_width() // 2, y + text_surf.get_height() // 2)
         )
         surface.blit(text_surf, text_rect)
-        y += text_surf.get_height() + 12
+        y += text_surf.get_height() + (30 if index == 0 else 15)
+
+    restart_surf = small_font.render(
+        "Premi SHIFT + R per rigiocare", True, (100, 100, 100)
+    )
+    restart_rect = restart_surf.get_rect(
+        center=(SCREEN_WIDTH // 2, panel_rect.bottom - INT_PADDING_Y)
+    )
+    surface.blit(restart_surf, restart_rect)
 
 
 def draw_intro(surface):
-    title_font = pygame.font.SysFont(None, 80, bold=True)
-    text_font = pygame.font.SysFont(None, 32)
-    small_font = pygame.font.SysFont(None, 24)
+    title_font = pygame.font.SysFont(FONT_FAMILY, 80, bold=True)
+    text_font = pygame.font.SysFont(FONT_FAMILY, 34, bold=True)
+    small_font = pygame.font.SysFont(FONT_FAMILY, 28)
 
     lines = [
-        ("Brain Shift", title_font),
-        ("", None),  # spacer
-        ("Rispondi velocemente:", text_font),
-        ("TOP: il numero è pari?", small_font),
-        ("BOTTOM: la lettera è una vocale?", small_font),
-        ("", None),  # spacer
-        ("Controlli:", text_font),
-        ("← SINISTRA = NO", small_font),
-        ("→ DESTRA = SI'", small_font),
-        ("", None),  # spacer
-        ("Premi SPAZIO per iniziare", text_font),
+        ("Brain Shift", title_font, CARD_TEXT_COLOR),
+        ("", None, None),
+        ("Rispondi velocemente:", text_font, (80, 80, 80)),
+        ("TOP: il numero è pari?", small_font, CARD_TEXT_COLOR),
+        ("BOTTOM: la lettera è una vocale?", small_font, CARD_TEXT_COLOR),
+        ("", None, None),
+        ("Controlli:", text_font, (80, 80, 80)),
+        ("SINISTRA = NO", small_font, (200, 50, 50)),
+        ("DESTRA = SI'", small_font, (50, 150, 50)),
+        ("", None, None),
+        ("Premi SPAZIO per iniziare", text_font, (50, 100, 200)),
     ]
 
-    y = 60
-    for line_text, font in lines:
+    INT_PADDING_X = 60
+    INT_PADDING_Y = 60
+
+    panel_width = 600 + (INT_PADDING_X * 2)
+    panel_height = 500 + (INT_PADDING_Y * 2)
+
+    panel_rect = pygame.Rect(0, 0, panel_width, panel_height)
+    panel_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+
+    shadow_surf = pygame.Surface((panel_width, panel_height), pygame.SRCALPHA)
+    pygame.draw.rect(
+        shadow_surf, (0, 0, 0, 40), shadow_surf.get_rect(), border_radius=20
+    )
+    surface.blit(shadow_surf, (panel_rect.x + 8, panel_rect.y + 10))
+
+    pygame.draw.rect(surface, (252, 252, 252), panel_rect, border_radius=20)
+    pygame.draw.rect(surface, CARD_BORDER_COLOR, panel_rect, 3, border_radius=20)
+
+    y = panel_rect.y + INT_PADDING_Y
+    for line_text, font, color in lines:
         if line_text == "":
-            y += 15
+            y += 20
             continue
-        text_surf = font.render(line_text, True, CARD_TEXT_COLOR)
+        text_surf = font.render(line_text, True, color)
         text_rect = text_surf.get_rect(
-            center=(surface.get_width() // 2, y)
+            center=(surface.get_width() // 2, y + text_surf.get_height() // 2)
         )
         surface.blit(text_surf, text_rect)
-        y += text_surf.get_height() + 15
+        y += text_surf.get_height() + 10
 
 
 def draw_paused(surface, remaining_time):
-    overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-    overlay.set_alpha(180)
-    overlay.fill((0, 0, 0))
+    overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 200))
     surface.blit(overlay, (0, 0))
 
-    font_title = pygame.font.SysFont(None, 80, bold=True)
-    font_text = pygame.font.SysFont(None, 42)
-    font_small = pygame.font.SysFont(None, 32)
+    font_title = pygame.font.SysFont(FONT_FAMILY, 90, bold=True)
+    font_text = pygame.font.SysFont(FONT_FAMILY, 46)
+    font_small = pygame.font.SysFont(FONT_FAMILY, 32, italic=True)
 
-    title = font_title.render("PAUSA", True, (255, 255, 255))
-    title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
-    surface.blit(title, title_rect)
+    def draw_text_with_shadow(text, font, color, center_pos):
+        shadow = font.render(text, True, (0, 0, 0))
+        shadow_rect = shadow.get_rect(center=(center_pos[0] + 3, center_pos[1] + 3))
+        surface.blit(shadow, shadow_rect)
+        main_text = font.render(text, True, color)
+        main_rect = main_text.get_rect(center=center_pos)
+        surface.blit(main_text, main_rect)
 
-    timer_text = font_text.render(f"Tempo rimanente: {remaining_time:.1f}s", True, (255, 255, 255))
-    timer_rect = timer_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-    surface.blit(timer_text, timer_rect)
-
-    resume_text = font_small.render("Premi P per riprendere", True, (200, 200, 200))
-    resume_rect = resume_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 80))
-    surface.blit(resume_text, resume_rect)
-
+    draw_text_with_shadow(
+        "PAUSA",
+        font_title,
+        (255, 255, 255),
+        (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100),
+    )
+    draw_text_with_shadow(
+        f"Tempo rimanente: {remaining_time:.1f}s",
+        font_text,
+        (255, 200, 100),
+        (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+    )
+    draw_text_with_shadow(
+        "Premi P per riprendere",
+        font_small,
+        (200, 200, 200),
+        (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100),
+    )
