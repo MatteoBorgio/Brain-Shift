@@ -1,5 +1,5 @@
 import pygame
-from scoring import apply_answer
+from scoring import apply_answer, apply_multiplier
 from ui import (
     draw_card,
     draw_results,
@@ -72,6 +72,7 @@ def reset_game(
 
 
 running = True
+streak = 0
 start_time = time()
 state = State.INTRO
 rng = Random()
@@ -161,14 +162,17 @@ while running:
 
         if is_correct:
             correct_answers += 1
+            streak += 1
             active_color = CARD_RECT_COLOR_CORRECT
         else:
             wrong_answers += 1
+            streak = 0
             active_color = CARD_RECT_COLOR_WRONG
 
         feedback_end_time = current_time_ticks + FEEDBACK_DURATION
         total_answers += 1
         score = apply_answer(score, is_correct)
+        score = apply_multiplier(score, streak)
         trial = generate_trial(rng)
 
     screen.fill(SCREEN_BG_COLOR)
