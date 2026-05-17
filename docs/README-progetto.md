@@ -38,7 +38,9 @@ python main.py
 
 ## Screenshot
 
-Uno o due screenshot del gioco (anche solo immagini PNG nella cartella `docs/img/`). Aiutano molto chi apre il repo. Una GIF animata è ancora meglio.
+![Screenshot 1](img/immagine_1.png)
+
+![Screenshot 2](img/immagine_2.png)
 
 ## Struttura del repository
 
@@ -93,9 +95,6 @@ pytest tests/test_rules.py
 
 # Lanciare una funzione di test specifica
 pytest tests/test_rules.py::test_nome_funzione
-
-# Con coverage (se installato: pip install pytest-cov)
-pytest tests/ --cov=. --cov-report=html
 ```
 
 ---
