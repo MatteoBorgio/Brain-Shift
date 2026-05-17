@@ -4,38 +4,37 @@
 
 ## Chi siamo
 
-- Nome Cognome 1 — email / handle GitHub
-- Nome Cognome 2 — email / handle GitHub
+- Adam Boulal — adam.boulal2@jcmaxwell.it / Adamboulal
+- Matteo Borgio — matteo.borgio@jcmaxwell.it / MatteoBorgio
 - (eventuale terzo membro se siete un trio)
 
 Classe 4A Informatica — a.s. 2025-26.
 
 ## Cos'è Brain Shift
 
-Scrivete 3-5 righe che spiegano il gioco a qualcuno che non l'ha mai visto. Non copia-incollate dalla specifica, riscrivete a parole vostre. Se non riuscite a riassumerlo, non l'avete capito.
+Brain Shift è un gioco che si basa sui riflessi di una persona. Ci sono due box, uno in alto e l'altro in basso. In uno dei due box compare una combinazione di una lettera e una cifra. Se la combinazione compare nel box in alto, bisogna verificare che la cifra sia pari, mentre se la combinazione compare nel box sotto, bisogna verificare che la lettera sia una vocale.
 
 ## Come giocare
 
 Istruzioni minime ma complete per far partire il gioco da clone pulito:
 
 ```bash
-git clone <URL-del-vostro-repo>
-cd <nome-cartella>
+git clone https://github.com/adamboulal/brain-shift.git
+cd brain-shift
 pip install -r requirements.txt
 python main.py
 ```
 
-Specificate:
-
-- versione Python richiesta (es. Python 3.11+)
-- versione pygame richiesta
-- altre dipendenze se ce ne sono
+**Requisiti:**
+- Python 3.11+
+- pygame 2.1+
+- pytest (per i test)
 
 ## Controlli
 
-- ← freccia sinistra: …
-- → freccia destra: …
-- … (eventuale mouse, pausa, ecc.)
+- ← freccia sinistra: Errato
+- → freccia destra: Giusto
+- p tasto p: pausa
 
 ## Screenshot
 
@@ -47,18 +46,56 @@ Breve spiegazione di dove sta cosa:
 
 ```
 brain_shift/
-├── main.py           ← entry point
-├── rules.py          ← logica regole
-├── scoring.py        ← sistema scoring
-├── ...
-├── docs/             ← documentazione
-└── tests/            ← test pytest
+├── main.py              ← entry point
+├── rules.py             ← logica regole
+├── scoring.py           ← sistema scoring
+├── config.py            ← configurazione
+├── generator.py         ← generatore di stimoli
+├── models.py            ← modelli dati
+├── state.py             ← gestione stato gioco
+├── timer.py             ← gestione timer
+├── ui.py                ← interfaccia utente
+├── requirements.txt     ← dipendenze Python
+├── docs/                ← documentazione
+│   ├── README.md
+│   ├── README-progetto.md
+│   ├── architettura.md
+│   ├── devlog.md
+│   ├── personalizzazioni.md
+│   ├── scelte.md
+│   └── uso-ia.md
+└── tests/               ← test pytest
+    ├── conftest.py
+    ├── README.md
+    ├── test_rules.py
+    └── test_scoring_base.py
 ```
 
 ## Come lanciare i test
 
+Eseguire tutti i test:
+
 ```bash
 pytest tests/
+```
+
+**Opzioni comuni:**
+
+```bash
+# Output dettagliato
+pytest tests/ -v
+
+# Mostrare print e output durante i test
+pytest tests/ -s
+
+# Lanciare un test specifico
+pytest tests/test_rules.py
+
+# Lanciare una funzione di test specifica
+pytest tests/test_rules.py::test_nome_funzione
+
+# Con coverage (se installato: pip install pytest-cov)
+pytest tests/ --cov=. --cov-report=html
 ```
 
 ---
