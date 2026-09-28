@@ -6,7 +6,6 @@
 
 - Adam Boulal — adam.boulal2@jcmaxwell.it / Adamboulal
 - Matteo Borgio — matteo.borgio@jcmaxwell.it / MatteoBorgio
-- (eventuale terzo membro se siete un trio)
 
 Classe 4A Informatica — a.s. 2025-26.
 
@@ -98,12 +97,3 @@ pytest tests/test_rules.py::test_nome_funzione
 ```
 
 ---
-
-### Domande-guida per questa pagina
-
-Non vanno lasciate nel file finale, servono solo a voi per capire cosa scrivere.
-
-1. Se un vostro compagno di un'altra classe apre questo repo, capisce in 30 secondi cosa fa il gioco?
-2. Le istruzioni di setup sono abbastanza specifiche da funzionare sul suo computer?
-3. C'è almeno uno screenshot o una GIF?
-4. Tutti i link ad altre pagine di `docs/` sono validi?
